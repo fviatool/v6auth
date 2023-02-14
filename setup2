@@ -98,7 +98,7 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6=2a01:4ff:f0:a94d::$(od -An -tx1 /dev/urandom | head -n 8 | tr -d ' ') 
+IP6=$(openssl rand -hex 4 | sed 's/\(..\)/:\1/g; s/^/2a01:4ff:f0:a94d:/') 
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
