@@ -42,9 +42,7 @@ setuid 65535
 stacksize 6291456 
 flush
 auth strong
-
 users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
-
 $(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
@@ -98,7 +96,7 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6=2a01:4ff:f0:a94d:$(openssl rand -hex 2):$(openssl rand -hex 2):$(openssl rand -hex 2):$(openssl rand -hex 2) 
+IP6="2a01:4ff:f0:a94d"
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
