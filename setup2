@@ -7,7 +7,12 @@ random() {
 }
 
 array=(1 2 3 4 5 6 7 8 9 0 a b c d e f)
-
+gen64() {
+	ip64() {
+		echo "${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}"
+	}
+	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
+}
 install_3proxy() {
     echo "installing 3proxy"
     URL="https://github.com/z3APA3A/3proxy/archive/3proxy-0.8.6.tar.gz"
@@ -37,7 +42,9 @@ setuid 65535
 stacksize 6291456 
 flush
 auth strong
+
 users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
+
 $(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
@@ -65,7 +72,7 @@ upload_proxy() {
 
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "user$port/$(random)/$IP4/$port/$($IP6)"
+        echo "trung$port/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
@@ -91,18 +98,10 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6='2a01:4ff:f0:a94d:773:2d8c:ef44:205d
-2a01:4ff:f0:a94d:c73:d9d8:7d27:38a6
-2a01:4ff:f0:a94d:bebe:341b:350a:fca5
-2a01:4ff:f0:a94d:b092:5278:6040:81d5
-2a01:4ff:f0:a94d:fe64:b76c:92b5:e626
-2a01:4ff:f0:a94d:8bf2:5534:4c0a:387d
-2a01:4ff:f0:a94d:f31d:7105:268f:6ab1
-2a01:4ff:f0:a94d:8ae8:efda:2ac4:268f
-2a01:4ff:f0:a94d:61bb:273e:ae7e:c7fb'
-
+IP6="2a01:4ff:f0:a94d::/64"
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
+
 
 echo "How many proxy do you want to create? Example 500"
 read COUNT
