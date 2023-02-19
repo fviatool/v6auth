@@ -96,7 +96,7 @@ WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6="2a01:4ff:f0:a94d"
+sed -i "s/IP6=.*/IP6=\"$(cat ips.txt | tr '\n' ':' | sed 's/:/\\\\"\\nIP6=\\"/g')\"/" /path/to/script.sh
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
